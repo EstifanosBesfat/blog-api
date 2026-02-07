@@ -9,7 +9,9 @@ const register = async (req, res, next) => {
   }
   try {
     const user = await registerUser({username, password, email});
-    return res.status(201).json({ message: "user registered!" });
+    return res.status(201).json({ message: "user registered!",
+        user
+     });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
