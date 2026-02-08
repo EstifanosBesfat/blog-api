@@ -4,13 +4,13 @@ const jwt = require("jsonwebtoken");
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
+  // get token it usally looks like " Bearer <token>" so we need to split the string
+  const token = authHeader && authHeader.split(" ")[1];
+
   // check if the token exists
   if (!token) {
     return res.status(401).json({ error: "Unauthoraized" });
   }
-
-  // get token it usally looks like " Bearer <token>" so we need to split the string
-  const token = authHeader.split(" ")[1];
 
   // verify token
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
