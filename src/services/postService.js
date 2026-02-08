@@ -10,4 +10,4 @@ const getAllPosts = async () => {
   return posts;
 };
 
-module.exports = { createNewPosts, getAllPosts };
+module.exports = { createNewPost, getAllPosts };
