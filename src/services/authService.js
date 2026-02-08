@@ -25,22 +25,22 @@ const registerUser = async (user) => {
 // login existing user
 const loginUser = async ({ email, password }) => {
   // check if user is found
-  const matchUser = await findEmail(email);
-  if (!matchUser) {
+  const user = await findEmail(email);
+  if (!user) {
     // don't use 'user not found' it helps hackers
     throw new Error("Invalid credentials");
   }
 
   // compare password
-  const isMatch = await bcrypt.compare(password, matchUser.password);
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error("Invalid credentials");
   }
 
   // generate token to make the login process easier for future
-  const token = generateToken(matchUser);
+  const token = generateToken(user);
 
-  return { token, matchUser };
+  return { token, user };
 };
 
 module.exports = { registerUser, loginUser };
