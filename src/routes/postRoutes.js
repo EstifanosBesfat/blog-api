@@ -1,5 +1,10 @@
 const express = require("express");
-const { createPost, getPosts } = require("../controllers/postController");
+const {
+  createPost,
+  getPosts,
+  updatePost,
+  deletePost,
+} = require("../controllers/postController");
 const { authenticateToken } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
@@ -7,5 +12,9 @@ const router = express.Router();
 router.post("/", authenticateToken, createPost);
 // public
 router.get("/", getPosts);
+//update
+router.put("/:id", authenticateToken, updatePost);
+// delete
+router.delete("/:id", authenticateToken, deletePost);
 
 module.exports = router;

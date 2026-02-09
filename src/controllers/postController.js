@@ -1,3 +1,4 @@
+const { deletePost } = require("../repositories/postRepository");
 const postService = require("../services/postService");
 
 const createPost = async (req, res) => {
@@ -34,4 +35,45 @@ const getPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getPosts };
+const updatePost = async (req, res) => {
+  const { title, content } = req.params;
+  const { postId } = req.params;
+  const userId = req.user.id;
+  if (!title || !content) {
+    return res.status(400).json({ error: "Title and content are required" });
+  }
+
+  try {
+    const post = await postService.updatePostById(
+      postId,
+      userId,
+      title,
+      content,
+    );
+    res
+      .status(200)
+      .json({ message: "post updated successfully", post: post });
+  } catch (error) {
+    res.status(403).json({ error: error.message });
+  }
+};
+
+const deletePost = async (req, res) => {
+  const postId = req.params.id;
+  if (!postId) {
+    return res.status(400).json({ error: "post id is missing." });
+  }
+
+  const userId = req.user.id;
+
+  try {
+    const deletedPost = await postService.deletePostById(postId, userId);
+    res
+      .status(200)
+      .json({ message: "post deleted successfully", post: deletedPost });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { createPost, getPosts, updatePost, deletePost };
