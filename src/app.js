@@ -4,18 +4,20 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const db = require("./config/db"); // Import DB to check connection
 const authRoutes = require("./routes/authRoutes"); // Import Routes
+const postRoutes = require("./routes/postRoutes");
 
 const app = express();
 
 // --- MIDDLEWARES ---
 app.use(express.json()); // Body parser
-app.use(helmet());       // Security
-app.use(morgan("dev"));  // Logging
+app.use(helmet()); // Security
+app.use(morgan("dev")); // Logging
 
 // --- ROUTES ---
 // Mounts auth routes at /api/auth
 // Example: POST http://localhost:3000/api/auth/register
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
 
 // --- STARTUP LOGIC ---
 const startServer = async () => {
