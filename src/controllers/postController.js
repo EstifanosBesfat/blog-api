@@ -1,4 +1,3 @@
-const { deletePost } = require("../repositories/postRepository");
 const postService = require("../services/postService");
 
 const createPost = async (req, res) => {
