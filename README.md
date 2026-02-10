@@ -39,19 +39,18 @@ This project demonstrates a professional backend architecture using the **MVC Pa
 
 ## 📂 Project Structure
 
-```text
-src/
- ├── config/         # Database connection & Env variables
- ├── controllers/    # Handles HTTP Requests & Responses
- ├── middlewares/    # Auth check, Validation, Error Handling
- ├── repositories/   # Raw SQL queries (Data Access Layer)
- ├── routes/         # API Endpoint definitions
- ├── services/       # Business Logic & complex operations
- ├── utils/          # Helpers (JWT generation, Password hashing)
- └── app.js          # Entry point
-
- ---
-
+   ```text
+      src/
+       ├── config/         # Database connection & Env variables
+       ├── controllers/    # Handles HTTP Requests & Responses
+       ├── middlewares/    # Auth check, Validation, Error Handling
+       ├── repositories/   # Raw SQL queries (Data Access Layer)
+       ├── routes/         # API Endpoint definitions
+       ├── services/       # Business Logic & complex operations
+       ├── utils/          # Helpers (JWT generation, Password hashing)
+       └── app.js          # Entry point
+```
+---
 # 🚀 Getting Started
 
 ## 1️⃣ Prerequisites
@@ -65,9 +64,10 @@ src/
 git clone https://github.com/YOUR_USERNAME/blog-api.git
 cd blog-api
 npm install
+```
 3️⃣ Environment Variables
 Create a .env file in the root directory:
-
+```bash
 PORT=3000
 DB_USER=postgres
 DB_PASSWORD=your_password
@@ -75,9 +75,10 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=blog_db
 JWT_SECRET=super_secret_key_change_this
+```
 4️⃣ Database Setup
 Run in PostgreSQL terminal (psql):
-
+```bash
 CREATE DATABASE blog_db;
 \c blog_db
 
@@ -107,6 +108,7 @@ CREATE TABLE comments (
     post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
 5️⃣ Run the Server
 npm start
 📖 API Documentation
