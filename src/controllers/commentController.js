@@ -39,6 +39,7 @@ const deleteComment = async (req, res) => {
 
   const userId = req.user.id;
   await removeComment(commentId, userId);
+  res.status(200).json({message: "comment deleted successfully"});
 };
 
 module.exports = { createComment,getComments,deleteComment };
