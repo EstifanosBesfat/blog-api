@@ -11,21 +11,9 @@ const createNewPost = async ({ title, content, userId }) => {
   return post;
 };
 
-const getAllPosts = async (page = 1, limit = 10) => {
-  // 1. Calculate the Offset (The logic)
-  // Page 1: (1-1)*10 = 0 (Skip 0)
-  // Page 2: (2-1)*10 = 10 (Skip 10)
-  const offset = (page - 1) * limit;
-
-  // 2. Call Repo
-  const posts = await findAllPosts(limit, offset);
-
-  return {
-    posts,
-    page: parseInt(page),
-    limit: parseInt(limit),
-    total: posts.length, // (In a real app, we'd do a separate count(*) query here)
-  };
+const getAllPosts = async (page = 1, limit = 10, search) => { // Added 'search' param
+    const offset = (page - 1) * limit;
+    return await findAllPosts(limit, offset, search);
 };
 
 const updatePostById = async (postId, userId, title, content) => {

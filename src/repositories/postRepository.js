@@ -10,19 +10,26 @@ const createPost = async ({ title, content, userId }) => {
   return result.rows[0]; // Return just the new post object
 };
 
-const findAllPosts = async (limit = 10, offset = 0) => {
-  // FIXED: Added LIMIT and OFFSET
-  const result = await db.query(
-    `
+const findAllPosts = async (limit = 10, offset = 0, search = null) => {
+  let query = `
         SELECT posts.id, posts.title, posts.content, posts.created_at, users.username 
         FROM posts 
         JOIN users ON posts.user_id = users.id 
-        ORDER BY posts.created_at DESC
-        LIMIT $1 OFFSET $2
-    `,
-    [limit, offset],
-  );
+    `;
 
+  const params = [limit, offset];
+
+  // 1. Dynamic Filtering
+  if (search) {
+    // We add the WHERE clause safely
+    query += ` WHERE posts.title ILIKE $3 `;
+    params.push(`%${search}%`); // % means "anything before or after"
+  }
+
+  // 2. Order and Limit
+  query += ` ORDER BY posts.created_at DESC LIMIT $1 OFFSET $2`;
+
+  const result = await db.query(query, params);
   return result.rows;
 };
 

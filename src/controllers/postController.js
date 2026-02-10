@@ -27,14 +27,14 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    // 1. Extract Query Params (Default to Page 1, Limit 10 if missing)
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
+    const search = req.query.search || null; // NEW
 
-    // 2. Call Service
-    const data = await postService.getAllPosts(page, limit);
-
-    res.status(200).json(data);
+    // Pass 'search' to service
+    const posts = await postService.getAllPosts(page, limit, search);
+    
+    res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
