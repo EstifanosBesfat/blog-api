@@ -111,26 +111,49 @@ CREATE TABLE comments (
 ```
 5️⃣ Run the Server
 npm start
+
 📖 API Documentation
+
 🔐 Authentication
+
+
 Method	Endpoint	Description
+
 POST	/api/auth/register	Register a new user
+
 POST	/api/auth/login	Login and receive JWT
+
+
 📝 Posts
+
 Method	Endpoint	Description
+
 GET	/api/posts	Get all posts (Pagination + Search supported)
+
 POST	/api/posts	Create a new post (Auth required)
+
 PUT	/api/posts/:id	Update a post (Owner only)
+
 DELETE	/api/posts/:id	Delete a post (Owner only)
+
 Query Parameters
+
 ?page=1       Default: 1
+
 ?limit=10     Default: 10
+
 ?search=text  Filter by title
+
 💬 Comments
+
 Method	Endpoint	Description
+
 GET	/api/posts/:postId/comments	Get comments for a post
+
 POST	/api/posts/:postId/comments	Add a comment (Auth required)
+
 DELETE	/api/comments/:id	Delete a comment (Owner only)
+
 🛡️ Security Features
 
 🔒 Password Hashing — passwords never stored in plain text
