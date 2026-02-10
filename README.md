@@ -132,6 +132,7 @@ GET	/api/posts/:postId/comments	Get comments for a post
 POST	/api/posts/:postId/comments	Add a comment (Auth required)
 DELETE	/api/comments/:id	Delete a comment (Owner only)
 🛡️ Security Features
+
 🔒 Password Hashing — passwords never stored in plain text
 
 🧠 JWT Protected Routes — middleware verification
