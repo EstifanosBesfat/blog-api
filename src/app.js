@@ -22,21 +22,25 @@ app.use("/api/posts", postRoutes);
 app.use("/api", commentRoutes);
 
 // --- STARTUP LOGIC ---
-const startServer = async () => {
-  try {
-    // 1. Check Database
-    await db.query("SELECT 1");
-    console.log("✅ Database Connected Successfully");
+if (require.main === module) {
+  // Only run this if we run "node src/app.js" directly
+  const startServer = async () => {
+    try {
+      // 1. Check Database
+      await db.query("SELECT 1");
+      console.log("✅ Database Connected Successfully");
 
-    // 2. Start Server
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Startup Error:", error.message);
-    process.exit(1);
-  }
-};
+      // 2. Start Server
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+      });
+    } catch (error) {
+      console.error("❌ Startup Error:", error.message);
+      process.exit(1);
+    }
+  };
+  startServer();
+}
 
-startServer();
+module.exports = app; // export app for testing

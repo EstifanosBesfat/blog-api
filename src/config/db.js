@@ -16,4 +16,5 @@ if (!process.env.DB_PASSWORD) {
 
 module.exports = {
   query: (text, params) => pool.query(text, params),
+  end: () => pool.end(),
 };
