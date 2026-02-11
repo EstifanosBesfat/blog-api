@@ -5,19 +5,21 @@ const {
   updatePost,
   deletePost,
 } = require("../repositories/postRepository");
+const db = require("../config/db");
 
 const createNewPost = async ({ title, content, userId }) => {
   const post = await createPost({ title, content, userId });
   return post;
 };
 
-const getAllPosts = async (page = 1, limit = 10, search) => { // Added 'search' param
-    const offset = (page - 1) * limit;
-    return await findAllPosts(limit, offset, search);
+const getAllPosts = async (page = 1, limit = 10, search) => {
+  // Added 'search' param
+  const offset = (page - 1) * limit;
+  return await findAllPosts(limit, offset, search);
 };
 
 const updatePostById = async (postId, userId, title, content) => {
-  const post = await findPostById;
+  const post = await findPostById(postId);
   if (!post) {
     throw new Error("Post not found");
   }
@@ -41,4 +43,45 @@ const deletePostById = async (postId, userId) => {
   return await deletePost(postId);
 };
 
-module.exports = { createNewPost, getAllPosts, updatePostById, deletePostById };
+const publishPost = async (postId, userId) => {
+  // 1. Get a dedicated client (connection) from the pool
+  const client = await db.pool.connect();
+
+  try {
+    // 2. Start Transaction
+    await client.query("BEGIN");
+
+    // 3. Update Post Status
+    await client.query("UPDATE posts SET status = $1 WHERE id = $2", [
+      "published",
+      postId,
+    ]);
+
+    // 4. Create System Comment (Using the user's ID)
+    const systemMessage = `System: This post was officially published on ${new Date().toLocaleDateString()}`;
+    await client.query(
+      "INSERT INTO comments (content, user_id, post_id) VALUES ($1, $2, $3)",
+      [systemMessage, userId, postId],
+    );
+
+    // 5. Commit (Save Changes)
+    await client.query("COMMIT");
+
+    return { message: "Post published successfully" };
+  } catch (error) {
+    // 6. Rollback (Undo Changes if error)
+    await client.query("ROLLBACK");
+    throw error; // Re-throw error so controller knows it failed
+  } finally {
+    // 7. Release connection back to pool (CRITICAL)
+    client.release();
+  }
+};
+
+module.exports = {
+  createNewPost,
+  getAllPosts,
+  updatePostById,
+  deletePostById,
+  publishPost,
+};
