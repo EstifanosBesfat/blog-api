@@ -27,8 +27,8 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || null; // NEW
 
     // Pass 'search' to service
@@ -41,8 +41,8 @@ const getPosts = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-  const { title, content } = req.params;
-  const { postId } = req.params;
+  const { title, content } = req.body;
+  const postId = req.params.id;
   const userId = req.user.id;
   if (!title || !content) {
     return res.status(400).json({ error: "Title and content are required" });
