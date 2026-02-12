@@ -9,11 +9,13 @@ const commentRoutes = require("./routes/commentRoutes");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./docs/swagger.yaml");
+const cors = require("cors");
 
 const app = express();
 
 // --- MIDDLEWARES ---
 app.use(express.json()); // Body parser
+app.use(cors());
 app.use(helmet()); // Security
 app.use(morgan("dev")); // Logging
 
