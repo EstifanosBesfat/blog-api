@@ -33,7 +33,7 @@ const getPosts = async (req, res) => {
 
     // Pass 'search' to service
     const posts = await postService.getAllPosts(page, limit, search);
-    
+
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -79,4 +79,16 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getPosts, updatePost, deletePost };
+const publish = async (req, res) => {
+  const postId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const post = await postService.publishPost(postId, userId);
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createPost, getPosts, updatePost, deletePost, publish };
