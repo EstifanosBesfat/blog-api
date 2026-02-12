@@ -6,6 +6,9 @@ const db = require("./config/db"); // Import DB to check connection
 const authRoutes = require("./routes/authRoutes"); // Import Routes
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./docs/swagger.yaml");
 
 const app = express();
 
@@ -20,6 +23,8 @@ app.use(morgan("dev")); // Logging
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api", commentRoutes);
+// Documentation Route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // --- STARTUP LOGIC ---
 if (require.main === module) {

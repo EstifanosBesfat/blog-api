@@ -1,0 +1,130 @@
+openapi: 3.0.0
+info:
+  title: Node.js Blog API
+  description: A professional REST API for a blogging platform.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local Development
+  - url: https://blog-api-bnxm.onrender.com
+    description: Production Server (Render)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+
+paths:
+  # --- AUTHENTICATION ---
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      security: [] # Public route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: User created successfully
+        400:
+          description: Validation error
+
+  /api/auth/login:
+    post:
+      summary: Login and get Token
+      tags: [Auth]
+      security: [] # Public route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Returns JWT Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  # --- POSTS ---
+  /api/posts:
+    get:
+      summary: Get all posts (Paginated)
+      tags: [Posts]
+      security: [] # Public route
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of posts
+    
+    post:
+      summary: Create a new post
+      tags: [Posts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        201:
+          description: Post created
+
+  /api/posts/{id}:
+    delete:
+      summary: Delete a post
+      tags: [Posts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Post deleted
+        403:
+          description: Access Denied (Not the owner)
