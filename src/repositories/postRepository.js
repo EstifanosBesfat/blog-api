@@ -14,34 +14,39 @@ const findAllPosts = async (limit = 10, offset = 0, search = null) => {
   let query = `
         SELECT posts.id, posts.title, posts.content,posts.status, posts.created_at, users.username 
         FROM posts 
-        JOIN users ON posts.user_id = users.id 
+        JOIN users ON posts.user_id = users.id
+        where status != $1
     `;
 
-  const params = [limit, offset];
+  const params = ["deleted", limit, offset];
 
   // 1. Dynamic Filtering
   if (search) {
     // We add the WHERE clause safely
-    query += ` WHERE posts.title ILIKE $3 `;
+    query += ` and posts.title ILIKE $4 `;
     params.push(`%${search}%`); // % means "anything before or after"
   }
 
   // 2. Order and Limit
-  query += ` ORDER BY posts.created_at DESC LIMIT $1 OFFSET $2`;
+  query += ` ORDER BY posts.created_at DESC LIMIT $2 OFFSET $3`;
 
   const result = await db.query(query, params);
   return result.rows;
 };
 
 const findPostById = async (id) => {
-  const result = await db.query("SELECT * FROM posts WHERE id = $1", [id]);
+  const result = await db.query(
+    "SELECT * FROM posts WHERE id = $1 and status != $2",
+    [id, "deleted"],
+  );
   return result.rows[0];
 };
 
 const findPostByTitle = async (title) => {
-  const result = await db.query("select * from posts where title = $1", [
-    title,
-  ]);
+  const result = await db.query(
+    "select * from posts where title = $1 and status != $2",
+    [title, "deleted"],
+  );
   return result.rows[0];
 };
 
@@ -54,7 +59,7 @@ const updatePost = async (id, title, content) => {
 };
 
 const deletePost = async (id) => {
-  await db.query("DELETE FROM posts WHERE id = $1", [id]);
+  await db.query("update posts set status = $1 WHERE id = $2", ["deleted", id]);
   return true;
 };
 
