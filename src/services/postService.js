@@ -4,10 +4,15 @@ const {
   findPostById,
   updatePost,
   deletePost,
+  findPostByTitle,
 } = require("../repositories/postRepository");
 const db = require("../config/db");
 
 const createNewPost = async ({ title, content, userId }) => {
+  const existingPost = await findPostByTitle(title);
+  if (existingPost) {
+    throw new Error("A post with this title already exists");
+  }
   const post = await createPost({ title, content, userId });
   return post;
 };

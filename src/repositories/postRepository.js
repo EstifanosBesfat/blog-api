@@ -38,6 +38,13 @@ const findPostById = async (id) => {
   return result.rows[0];
 };
 
+const findPostByTitle = async (title) => {
+  const result = await db.query("select * from posts where title = $1", [
+    title,
+  ]);
+  return result.rows[0];
+};
+
 const updatePost = async (id, title, content) => {
   const result = await db.query(
     "UPDATE posts SET title = $1, content = $2, updated_at = NOW() WHERE id = $3 RETURNING *",
@@ -57,4 +64,5 @@ module.exports = {
   deletePost,
   findPostById,
   updatePost,
+  findPostByTitle,
 };
