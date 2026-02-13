@@ -12,7 +12,7 @@ const createPost = async ({ title, content, userId }) => {
 
 const findAllPosts = async (limit = 10, offset = 0, search = null) => {
   let query = `
-        SELECT posts.id, posts.title, posts.content, posts.created_at, users.username 
+        SELECT posts.id, posts.title, posts.content,posts.status, posts.created_at, users.username 
         FROM posts 
         JOIN users ON posts.user_id = users.id 
     `;
