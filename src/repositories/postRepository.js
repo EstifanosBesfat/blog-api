@@ -12,7 +12,8 @@ const createPost = async ({ title, content, userId }) => {
 
 const findAllPosts = async (limit = 10, offset = 0, search = null) => {
   let query = `
-        SELECT posts.id, posts.title, posts.content,posts.status, posts.created_at, users.username 
+        SELECT posts.id, posts.title, posts.content,posts.status, posts.created_at, users.username,
+        (select count(*) from comments where post_id = posts.id) as comment_count 
         FROM posts 
         JOIN users ON posts.user_id = users.id
         where status != $1
