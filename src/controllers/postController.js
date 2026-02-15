@@ -41,26 +41,18 @@ const getPosts = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-  const { title, content } = req.body;
-  const postId = req.params.id;
+  const { id } = req.params;
+  const { title, content, status } = req.body; // Added status
   const userId = req.user.id;
-  if (!title || !content) {
-    return res.status(400).json({ error: "Title and content are required" });
-  }
 
   try {
-    const post = await postService.updatePostById(
-      postId,
-      userId,
-      title,
-      content,
-    );
-    res.status(200).json({ message: "post updated successfully", post: post });
+    // Pass status
+    const post = await postService.updatePostById(id, userId, title, content, status);
+    res.status(200).json({ message: "Update successful", post });
   } catch (error) {
     res.status(403).json({ error: error.message });
   }
 };
-
 const deletePost = async (req, res) => {
   const postId = req.params.id;
   if (!postId) {

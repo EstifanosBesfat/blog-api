@@ -23,18 +23,13 @@ const getAllPosts = async (page = 1, limit = 10, search) => {
   return await findAllPosts(limit, offset, search);
 };
 
-const updatePostById = async (postId, userId, title, content) => {
+const updatePostById = async (postId, userId, title, content, status) => {
   const post = await findPostById(postId);
-  if (!post) {
-    throw new Error("Post not found");
-  }
+  if (!post) throw new Error("Post not found");
+  if (post.user_id !== userId) throw new Error("Access Denied");
 
-  // ownership check
-  if (post.user_id !== userId) {
-    throw new Error("Access Denied: You are not the author");
-  }
-
-  return await updatePost(postId, title, content);
+  // Pass status to repo
+  return await updatePost(postId, title, content, status);
 };
 
 const deletePostById = async (postId, userId) => {

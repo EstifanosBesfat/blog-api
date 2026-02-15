@@ -51,10 +51,13 @@ const findPostByTitle = async (title) => {
   return result.rows[0];
 };
 
-const updatePost = async (id, title, content) => {
+const updatePost = async (id, title, content, status) => {
   const result = await db.query(
-    "UPDATE posts SET title = $1, content = $2, updated_at = NOW() WHERE id = $3 RETURNING *",
-    [title, content, id],
+    `UPDATE posts 
+     SET title = $1, content = $2, updated_at = NOW(), status = COALESCE($4, status) 
+     WHERE id = $3 
+     RETURNING *`,
+    [title, content, id, status]
   );
   return result.rows[0];
 };
