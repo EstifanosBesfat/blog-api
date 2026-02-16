@@ -8,9 +8,6 @@ const { sendError } = require("../utils/errorResponse");
 const createComment = async (req, res) => {
   const postId = req.params.postId;
   const content = req.body.content;
-  if (!content) {
-    return res.status(400).json({ error: "content cannot be empty" });
-  }
   const userId = req.user.id;
   try {
     const comment = await addComment(userId, postId, content);
@@ -34,10 +31,6 @@ const getComments = async (req, res) => {
 
 const deleteComment = async (req, res) => {
   const commentId = req.params.id;
-  if (!commentId) {
-    return res.status(400).json({ error: "comment id is required" });
-  }
-
   const userId = req.user.id;
   try {
     await removeComment(commentId, userId);

@@ -4,11 +4,6 @@ const { sendError } = require("../utils/errorResponse");
 const createPost = async (req, res) => {
   const { title, content } = req.body;
 
-  // Validate Input
-  if (!title || !content) {
-    return res.status(400).json({ error: "Title and content are required" });
-  }
-
   // Get User ID from Token (Middleware put it there)
   const userId = req.user.id;
 
@@ -56,10 +51,6 @@ const updatePost = async (req, res) => {
 };
 const deletePost = async (req, res) => {
   const postId = req.params.id;
-  if (!postId) {
-    return res.status(400).json({ error: "post id is missing." });
-  }
-
   const userId = req.user.id;
 
   try {
