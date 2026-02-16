@@ -3,3 +3,22 @@
 {"level":"info","message":"✅ Database Connected Successfully","timestamp":"2026-02-16T18:28:40.086Z"}
 {"level":"info","message":"🕰️ Cron Jobs Scheduled","timestamp":"2026-02-16T18:28:40.109Z"}
 {"level":"info","message":"🚀 Server running on port 3000","timestamp":"2026-02-16T18:28:40.113Z"}
+{"level":"info","message":"✅ Database Connected Successfully","timestamp":"2026-02-16T18:33:47.096Z"}
+{"level":"info","message":"🕰️ Cron Jobs Scheduled","timestamp":"2026-02-16T18:33:47.118Z"}
+{"level":"info","message":"🚀 Server running on port 3000","timestamp":"2026-02-16T18:33:47.121Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:34:00.049Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:34:00.141Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:35:00.037Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:35:00.078Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:36:00.023Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:36:00.123Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:37:00.026Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:37:00.065Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:38:00.033Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:38:00.072Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:39:00.021Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:39:00.083Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:40:00.019Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:40:00.067Z"}
+{"level":"info","message":"🧹 Janitor Job: Starting cleanup of deleted posts...","timestamp":"2026-02-16T18:41:00.027Z"}
+{"level":"info","message":"ℹ️ Janitor Job: No old posts found to delete.","timestamp":"2026-02-16T18:41:00.179Z"}
