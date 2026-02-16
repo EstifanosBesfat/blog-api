@@ -13,6 +13,8 @@ const cors = require("cors");
 const { startCleanupJob } = require("./cron/cleanupService");
 const { apiLimiter } = require("./middlewares/rateLimitMiddleware");
 const logger = require("./utils/logger");
+const userRoutes = require("./routes/userRoutes");
+const path = require("path");
 
 const app = express();
 
@@ -21,6 +23,9 @@ app.use(express.json()); // Body parser
 app.use(cors());
 app.use(helmet()); // Security
 app.use(morgan("dev")); // Logging
+// --- STATIC FILES ---
+// This tells Express: "If someone asks for /uploads/image.jpg, look in the uploads folder"
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // --- ROUTES ---
 // Mounts auth routes at /api/auth
@@ -28,6 +33,7 @@ app.use(morgan("dev")); // Logging
 app.use("/api", apiLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api", commentRoutes);
 // Documentation Route
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
