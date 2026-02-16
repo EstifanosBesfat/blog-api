@@ -1,7 +1,7 @@
+require("dotenv").config({ path: ".env.test" });
 const request = require("supertest");
 const app = require("../src/app");
 const db = require("../src/config/db");
-require("dotenv").config({ path: ".env.test" });
 
 let userToken;
 let otherUserToken;
@@ -28,7 +28,9 @@ beforeAll(async () => {
             title VARCHAR(255) NOT NULL,
             content TEXT NOT NULL,
             user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            created_at TIMESTAMP DEFAULT NOW()
+            status VARCHAR(20) DEFAULT 'draft',
+            created_at TIMESTAMP DEFAULT NOW(),
+            updated_at TIMESTAMP DEFAULT NOW()
         );
     `);
 
@@ -135,6 +137,33 @@ describe("Comments API", () => {
       .send({ content: "" });
 
     expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error");
+  });
+
+  it("should block publishing another user's post", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${postId}/publish`)
+      .set("Authorization", `Bearer ${otherUserToken}`);
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+  });
+
+  it("should allow owner to publish their own post", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${postId}/publish`)
+      .set("Authorization", `Bearer ${userToken}`);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("message", "Post published successfully");
+  });
+
+  it("should reject publishing an already published post", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${postId}/publish`)
+      .set("Authorization", `Bearer ${userToken}`);
+
+    expect(res.statusCode).toEqual(409);
     expect(res.body).toHaveProperty("error");
   });
 });

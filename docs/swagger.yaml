@@ -114,6 +114,37 @@ paths:
           description: Post created
 
   /api/posts/{id}:
+    put:
+      summary: Update a post
+      tags: [Posts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                status:
+                  type: string
+                  enum: [draft, published, deleted]
+      responses:
+        200:
+          description: Post updated
+        403:
+          description: Access denied
+        404:
+          description: Post not found
+
     delete:
       summary: Delete a post
       tags: [Posts]
@@ -128,3 +159,94 @@ paths:
           description: Post deleted
         403:
           description: Access Denied (Not the owner)
+        404:
+          description: Post not found
+
+  /api/posts/{id}/publish:
+    put:
+      summary: Publish a post
+      tags: [Posts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Post published
+        403:
+          description: Access denied
+        404:
+          description: Post not found
+        409:
+          description: Post is already published
+
+  /api/posts/{postId}/comments:
+    get:
+      summary: Get comments for a post
+      tags: [Comments]
+      security: [] # Public route
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Comments list
+
+    post:
+      summary: Add a comment to a post
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        201:
+          description: Comment created
+        400:
+          description: Validation error
+
+  /api/comments/{id}:
+    delete:
+      summary: Delete a comment
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Comment deleted
+        403:
+          description: Access denied
+        404:
+          description: Comment not found
+
+  /api/auth/profile:
+    get:
+      summary: Get authenticated user profile payload
+      tags: [Auth]
+      responses:
+        200:
+          description: Protected profile payload
+        401:
+          description: Missing token
+        403:
+          description: Invalid or expired token
