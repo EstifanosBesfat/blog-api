@@ -10,6 +10,7 @@ const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./docs/swagger.yaml");
 const cors = require("cors");
+const { startCleanupJob } = require("./cron/cleanupService");
 
 const app = express();
 
@@ -33,11 +34,15 @@ if (require.main === module) {
   // Only run this if we run "node src/app.js" directly
   const startServer = async () => {
     try {
-      // 1. Check Database
+      // Check Database
       await db.query("SELECT 1");
       console.log("✅ Database Connected Successfully");
 
-      // 2. Start Server
+      // Start the Janitor
+      startCleanupJob();
+      console.log("🕰️ Cron Jobs Scheduled");
+
+      // Start Server
       const PORT = process.env.PORT || 3000;
       app.listen(PORT, () => {
         console.log(`🚀 Server running on port ${PORT}`);
