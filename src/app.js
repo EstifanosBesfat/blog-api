@@ -12,6 +12,7 @@ const swaggerDocument = YAML.load("./docs/swagger.yaml");
 const cors = require("cors");
 const { startCleanupJob } = require("./cron/cleanupService");
 const { apiLimiter } = require("./middlewares/rateLimitMiddleware");
+const logger = require("./utils/logger");
 
 const app = express();
 
@@ -38,19 +39,19 @@ if (require.main === module) {
     try {
       // Check Database
       await db.query("SELECT 1");
-      console.log("✅ Database Connected Successfully");
+      logger.info("✅ Database Connected Successfully");
 
       // Start the Janitor
       startCleanupJob();
-      console.log("🕰️ Cron Jobs Scheduled");
+      logger.info("🕰️ Cron Jobs Scheduled");
 
       // Start Server
       const PORT = process.env.PORT || 3000;
       app.listen(PORT, () => {
-        console.log(`🚀 Server running on port ${PORT}`);
+        logger.info(`🚀 Server running on port ${PORT}`);
       });
     } catch (error) {
-      console.error("❌ Startup Error:", error.message);
+      logger.error("❌ Startup Error:", error.message);
       process.exit(1);
     }
   };

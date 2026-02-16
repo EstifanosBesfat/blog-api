@@ -1,11 +1,12 @@
 const cron = require("node-cron");
 const db = require("../config/db");
+const logger = require("../utils/logger");
 
 const startCleanupJob = () => {
   // Schedule: Run every minute (For testing)
   // In production, use "0 0 * * *" (Every midnight)
   cron.schedule("* * * * *", async () => {
-    console.log("🧹 Janitor Job: Starting cleanup of deleted posts...");
+    logger.info("🧹 Janitor Job: Starting cleanup of deleted posts...");
 
     try {
       // Logic: Delete posts marked 'deleted' that haven't been touched in 1 minute
@@ -18,13 +19,13 @@ const startCleanupJob = () => {
       const result = await db.query(query, ["deleted"]);
 
       if (result.rowCount > 0) {
-        console.log(`✅ Janitor Job: Permanently deleted ${result.rowCount} old posts.`);
+        logger.info(`✅ Janitor Job: Permanently deleted ${result.rowCount} old posts.`);
       } else {
-        console.log("ℹ️ Janitor Job: No old posts found to delete.");
+        logger.info("ℹ️ Janitor Job: No old posts found to delete.");
       }
 
     } catch (error) {
-      console.error("❌ Janitor Job Failed:", error.message);
+      logger.error("❌ Janitor Job Failed:", error.message);
     }
   });
 };
