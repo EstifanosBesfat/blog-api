@@ -11,6 +11,7 @@ const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./docs/swagger.yaml");
 const cors = require("cors");
 const { startCleanupJob } = require("./cron/cleanupService");
+const { apiLimiter } = require("./middlewares/rateLimitMiddleware");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(morgan("dev")); // Logging
 // --- ROUTES ---
 // Mounts auth routes at /api/auth
 // Example: POST http://localhost:3000/api/auth/register
+app.use("/api", apiLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api", commentRoutes);
