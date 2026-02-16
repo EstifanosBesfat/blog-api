@@ -3,6 +3,7 @@ const {
   getPostComments,
   removeComment,
 } = require("../services/commentService");
+const { sendError } = require("../utils/errorResponse");
 
 const createComment = async (req, res) => {
   const postId = req.params.postId;
@@ -17,7 +18,7 @@ const createComment = async (req, res) => {
       .status(201)
       .json({ message: "comment added successfully", comment: comment });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendError(res, error);
   }
 };
 
@@ -27,7 +28,7 @@ const getComments = async (req, res) => {
     const comments = await getPostComments(postId);
     res.status(200).json({ message: "comments are here", comments });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendError(res, error);
   }
 };
 
@@ -38,8 +39,12 @@ const deleteComment = async (req, res) => {
   }
 
   const userId = req.user.id;
-  await removeComment(commentId, userId);
-  res.status(200).json({message: "comment deleted successfully"});
+  try {
+    await removeComment(commentId, userId);
+    res.status(200).json({ message: "comment deleted successfully" });
+  } catch (error) {
+    sendError(res, error);
+  }
 };
 
-module.exports = { createComment,getComments,deleteComment };
+module.exports = { createComment, getComments, deleteComment };

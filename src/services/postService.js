@@ -51,29 +51,48 @@ const publishPost = async (postId, userId) => {
     // 2. Start Transaction
     await client.query("BEGIN");
 
-    // 3. Update Post Status
+    // 3. Verify post ownership and state before changing anything
+    const postResult = await client.query(
+      "SELECT id, user_id, status FROM posts WHERE id = $1 AND status != $2 FOR UPDATE",
+      [postId, "deleted"],
+    );
+
+    const post = postResult.rows[0];
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    if (post.user_id !== userId) {
+      throw new Error("Access Denied: You are not the author");
+    }
+
+    if (post.status === "published") {
+      throw new Error("Post is already published");
+    }
+
+    // 4. Update Post Status
     await client.query("UPDATE posts SET status = $1 WHERE id = $2", [
       "published",
       postId,
     ]);
 
-    // 4. Create System Comment (Using the user's ID)
+    // 5. Create System Comment (Using the user's ID)
     const systemMessage = `System: This post was officially published on ${new Date().toLocaleDateString()}`;
     await client.query(
       "INSERT INTO comments (content, user_id, post_id) VALUES ($1, $2, $3)",
       [systemMessage, userId, postId],
     );
 
-    // 5. Commit (Save Changes)
+    // 6. Commit (Save Changes)
     await client.query("COMMIT");
 
     return { message: "Post published successfully" };
   } catch (error) {
-    // 6. Rollback (Undo Changes if error)
+    // 7. Rollback (Undo Changes if error)
     await client.query("ROLLBACK");
     throw error; // Re-throw error so controller knows it failed
   } finally {
-    // 7. Release connection back to pool (CRITICAL)
+    // 8. Release connection back to pool (CRITICAL)
     client.release();
   }
 };

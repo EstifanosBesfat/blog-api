@@ -1,4 +1,5 @@
 const postService = require("../services/postService");
+const { sendError } = require("../utils/errorResponse");
 
 const createPost = async (req, res) => {
   const { title, content } = req.body;
@@ -21,7 +22,7 @@ const createPost = async (req, res) => {
       post,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendError(res, error);
   }
 };
 
@@ -36,7 +37,7 @@ const getPosts = async (req, res) => {
 
     res.status(200).json(posts);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendError(res, error);
   }
 };
 
@@ -50,7 +51,7 @@ const updatePost = async (req, res) => {
     const post = await postService.updatePostById(id, userId, title, content, status);
     res.status(200).json({ message: "Update successful", post });
   } catch (error) {
-    res.status(403).json({ error: error.message });
+    sendError(res, error);
   }
 };
 const deletePost = async (req, res) => {
@@ -67,7 +68,7 @@ const deletePost = async (req, res) => {
       .status(200)
       .json({ message: "post deleted successfully", post: deletedPost });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendError(res, error);
   }
 };
 
@@ -79,7 +80,7 @@ const publish = async (req, res) => {
     const post = await postService.publishPost(postId, userId);
     res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendError(res, error);
   }
 };
 

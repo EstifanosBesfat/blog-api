@@ -1,29 +1,21 @@
 const authService = require("../services/authService");
+const { sendError } = require("../utils/errorResponse");
 
 // --- REGISTER ---
 const register = async (req, res) => {
   const { username, email, password } = req.body;
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Username, email, and password are required" });
-  }
-
   try {
     const user = await authService.registerUser({ username, email, password });
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    sendError(res, error);
   }
 };
 
 // --- LOGIN (NEW) ---
 const login = async (req, res) => {
   const { email, password } = req.body;
-
-  // 1. Validate Input
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
-  }
 
   try {
     // 2. Call Service (returns token + user info)
@@ -40,8 +32,8 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    // 4. Handle Errors (401 Unauthorized)
-    res.status(401).json({ error: error.message });
+    // 4. Handle Errors
+    sendError(res, error);
   }
 };
 
