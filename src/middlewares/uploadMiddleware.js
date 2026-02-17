@@ -1,39 +1,26 @@
-const multer = require("multer");
-const path = require("path");
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+require('dotenv').config();
 
-// 1. Configure Storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Save files to the 'uploads' folder in the root directory
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    // Create a unique filename: userid-timestamp.extension
-    // Example: user-5-167888899.jpg
-    const userId = req.user ? req.user.id : "unknown";
-    const ext = path.extname(file.originalname);
-    cb(null, `user-${userId}-${Date.now()}${ext}`);
+// 1. Configure Cloudinary (Connect to your account)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// 2. Configure Storage Engine
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'blog-profiles', // The folder name in your Cloudinary dashboard
+    allowed_formats: ['jpg', 'png', 'jpeg'], // Only allow images
+    // public_id: (req, file) => 'user-' + req.user.id, // Optional: Custom filename
   },
 });
 
-// 2. Filter (Only allow Images)
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif/;
-  const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mime = allowedTypes.test(file.mimetype);
-
-  if (ext && mime) {
-    return cb(null, true);
-  } else {
-    cb(new Error("Only images (jpeg, jpg, png, gif) are allowed!"));
-  }
-};
-
-// 3. Initialize Multer
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 }, // Limit: 2MB
-});
+// 3. Initialize Multer with Cloudinary Storage
+const upload = multer({ storage: storage });
 
 module.exports = upload;
